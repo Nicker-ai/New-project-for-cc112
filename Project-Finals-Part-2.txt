@@ -1,0 +1,875 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <windows.h>
+#include <conio.h>
+
+// Function declarations
+int main();
+int signupPage();
+int loginPage();
+int studentMenu();
+int profMenu();
+void professorChoice();  // Added declaration
+void studentChoice();    // Added declaration
+
+// Function for professor menu
+void profile_detailsPage();
+void aboutusPage();
+void mark_attendancePage();
+void classroom_professorPage();
+
+// Function for student menu
+void profile_detailsPage2();
+void enrollmentPage();
+void eog_requestPage();
+void classroom_studentPage();
+
+// Function for changing profile details
+void change_emailPage();
+void edit_numberPage();
+void change_passPage();
+void change_emailPage2();
+void edit_numberPage2();
+void change_passPage2();
+
+char userN[50]; // storage for username
+char email[50]; 
+char contactN[50]; 
+char passW[50]; // storage for password
+int valid = 1;
+
+char userLevel[50]; // storage for user's college level
+char profMajor[50]; // storage for user's major subject
+
+void loginDisplay() {
+    printf("\t\t\t============================================================\n");
+    printf("\t\t\t*                   Login your Account!                    *\n");
+    printf("\t\t\t============================================================\n\n");
+}
+
+void changeAccountDisplay() {
+	printf("\n=====================================================================================================================\n");
+    printf("*                                          Change Account Information                                               *\n");
+    printf("=====================================================================================================================\n");
+}
+
+void gotoxy(int x, int y)
+{
+    COORD coord;
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+void hidecursor()
+{
+   HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+   CONSOLE_CURSOR_INFO info;
+   info.dwSize = 100;
+   info.bVisible = FALSE;
+   SetConsoleCursorInfo(consoleHandle, &info);
+}
+
+// Main function with main loop
+int main() {
+    int user;
+    hidecursor();
+    
+    while (1) { // Loop to keep the program running until user chooses to exit
+        system("cls");
+        printf("\n\n\n\n\n");
+        printf("\t\t\t============================================================\n");
+        printf("\t\t\t*                  WELCOME TO PHILTECH!                    *\n");
+        printf("\t\t\t============================================================\n\n");
+
+        printf("\t\t\t\t\t ----------------------------\n");
+		printf("\t\t\t\t\t|       [ 1 ] Login          |\n");
+		printf("\t\t\t\t\t ----------------------------\n");
+		printf("\t\t\t\t\t ----------------------------\n");
+        printf("\t\t\t\t\t|       [ 2 ] Sign Up        |\n");
+        printf("\t\t\t\t\t ----------------------------\n");
+        printf("\t\t\t\t\t ----------------------------\n");
+        printf("\t\t\t\t\t|       [ 0 ] Exit           |\n");
+        printf("\t\t\t\t\t ----------------------------\n");
+        
+        printf(" ");
+        scanf("%d", &user);
+
+        switch (user) {
+            case 1:
+                loginPage(); // Call login page
+                break;
+            case 2:
+                signupPage(); // Call signup page
+                break;
+            case 0:
+                exit(0); // Exit the program
+            default:
+                printf("Invalid choice, please try again.\n");
+                break;
+        }
+    }
+    return 0;
+}
+
+// Signup page
+int signupPage() {
+    system("cls");
+    printf("\n\n\n\n\n");
+    printf("\t\t\t============================================================\n");
+    printf("\t\t\t*                     Create an Account                    *\n");
+    printf("\t\t\t============================================================\n\n");
+
+    do {
+        valid = 1;
+        printf("\t\t\t -----------------------------------------------------------\n");
+        printf("\t\t\t| Username: ");
+        scanf("%s", userN);
+        printf("\t\t\t -----------------------------------------------------------\n");
+
+        // Check if username contains only letters
+        for (int i = 0; i < strlen(userN); i++) {
+            if (!isalpha(userN[i])) {
+                valid = 0;
+                printf("\t\t\tError: Username must contain only letters.\n\n");
+                break;
+            }
+        }
+    } while (!valid);
+
+    printf("\t\t\t -----------------------------------------------------------\n");
+    printf("\t\t\t| Email: ");
+    scanf("%s", email);
+    printf("\t\t\t -----------------------------------------------------------\n");
+
+    do {
+        valid = 1;
+        printf("\t\t\t -----------------------------------------------------------\n");
+        printf("\t\t\t| Contact Number: ");
+        scanf("%s", contactN);
+        printf("\t\t\t -----------------------------------------------------------\n");
+
+        // Check if contact number contains only digits
+        for (int i = 0; i < strlen(contactN); i++) {
+            if (!isdigit(contactN[i])) {
+                valid = 0;
+                printf("\t\t\tError: Contact number must contain only digits.\n\n");
+                break;
+            }
+        }
+    } while (!valid);
+
+    printf("\t\t\t -----------------------------------------------------------\n");
+    printf("\t\t\t| Password: ");
+    scanf("%s", passW);
+    printf("\t\t\t -----------------------------------------------------------\n");
+
+    printf("\n\t\t\tAccount created successfully!\n\n");
+    printf("\t\t\tPress any key to continue...");
+    getch();
+    
+    return 0; // Return to main loop
+}
+
+// Login page
+int loginPage() {
+    int roleC;
+    char loginUserN[50], loginPassW[50];
+
+    system("cls");
+    printf("\n\n\n\n\n");
+    loginDisplay();
+    printf("\t\t\t -----------------------------------------------------------\n");
+    printf("\t\t\t| Enter your username: ");
+    scanf("%s", loginUserN);
+    printf("\t\t\t -----------------------------------------------------------\n");
+    printf("\t\t\t -----------------------------------------------------------\n");
+    printf("\t\t\t| Enter your password: ");
+    scanf("%s", loginPassW);
+    printf("\t\t\t -----------------------------------------------------------\n");
+    
+    system("cls");
+
+    // Check if login credentials match
+    if (strcmp(loginUserN, userN) == 0 && strcmp(loginPassW, passW) == 0) {
+        	printf("\n\n\n\n\n");
+            loginDisplay();
+            printf("\t\t\t\t\t ----------------------------\n");
+            printf("\t\t\t\t\t|    Choose your position:   |\n");
+            printf("\t\t\t\t\t ----------------------------\n");
+            printf("\t\t\t\t\t|      [ 1 ] Professor       |\n");
+            printf("\t\t\t\t\t|      [ 2 ] Student         |\n");
+            printf("\t\t\t\t\t ----------------------------\n\n\n");
+
+            printf("\t\t\t\t\t     What's your answer: ");
+            scanf("%d", &roleC);
+
+            switch (roleC) {
+                case 1:
+                    professorChoice();
+                    break;
+                case 2:
+                    studentChoice();
+                    break;
+                default:
+                	printf("\n\n");
+                    printf("\t\t\t\t\t(System): Invalid Input!\n");
+                    printf("\t\t\t\t\tPress any key to continue...");
+    				getch();
+    				loginPage();
+            }
+    } else {
+    	printf("\n\n\n\n\n");
+        loginDisplay();
+        printf("\t\t\t(System): Invalid username or password. Please try again.\n\n");
+        printf("\t\t\tPress any key to continue...");
+        getch();
+        loginPage();
+    }
+    return 0; // Return to main loop
+}
+
+// Professor choice after successful login
+void professorChoice() {
+    int profSubject;
+
+    system("cls");
+    printf("\n\n\n\n\n");
+    loginDisplay();
+    printf("\t\t\t\t\t -------------------------------\n");
+    printf("\t\t\t\t\t|  What is your major subject?  |\n");
+    printf("\t\t\t\t\t -------------------------------\n");
+    printf("\t\t\t\t\t|        [ 1 ] Filipino         |\n");
+    printf("\t\t\t\t\t|        [ 2 ] English          |\n");
+    printf("\t\t\t\t\t|        [ 3 ] PE               |\n");
+    printf("\t\t\t\t\t|        [ 4 ] History          |\n");
+    printf("\t\t\t\t\t|        [ 5 ] Math             |\n");
+    printf("\t\t\t\t\t -------------------------------\n\n\n");
+
+    printf("\t\t\t\t\t      What is your answer: ");
+    scanf("%d", &profSubject);
+
+    switch (profSubject) {
+        case 1:
+            strcpy(profMajor, "Filipino");
+            break;
+        case 2:
+            strcpy(profMajor, "English");
+            break;
+        case 3:
+            strcpy(profMajor, "PE");
+            break;
+        case 4:
+            strcpy(profMajor, "History");
+            break;
+        case 5:
+            strcpy(profMajor, "Math");
+            break;
+        default:
+            printf("\t\t\tInvalid selection, returning to login.\n");
+            break;
+    }
+    
+    printf("\n\n");
+    printf("\t\t\t\tSuccessfully logged in as %s professor!\n\n", profMajor);
+    printf("\t\t\t\tPress any key to continue...");
+    getch();
+    profMenu();
+}
+
+// Student choice after successful login
+void studentChoice() {
+    int studentLevel;
+
+    system("cls");
+    printf("\n\n\n\n\n");
+    loginDisplay();
+    printf("\t\t\t\t\t -------------------------------\n");
+    printf("\t\t\t\t\t|  What is your college level?  |\n");
+    printf("\t\t\t\t\t -------------------------------\n");
+    printf("\t\t\t\t\t|      [ 1 ] First year         |\n");
+    printf("\t\t\t\t\t|      [ 2 ] Second year        |\n");
+    printf("\t\t\t\t\t|      [ 3 ] Third year         |\n");
+    printf("\t\t\t\t\t|      [ 4 ] Fourth year        |\n");
+    printf("\t\t\t\t\t -------------------------------\n\n\n");
+
+    printf("\t\t\t\t\t     What is your answer: ");
+    scanf("%d", &studentLevel);
+
+    switch (studentLevel) {
+        case 1:
+            strcpy(userLevel, "1st year");
+            break;
+        case 2:
+            strcpy(userLevel, "2nd year");
+            break;
+        case 3:
+            strcpy(userLevel, "3rd year");
+            break;
+        case 4:
+            strcpy(userLevel, "4th year");
+            break;
+        default:
+        	printf("\n\n");
+            printf("\t\t\t\t\tInvalid selection, returning to login.\n");
+            printf("\t\t\t\t\tPress any key to continue...");
+            getch();
+            studentChoice();
+            break;
+    }
+    
+    printf("\n\n");
+    printf("\t\t\t\tSuccessfully logged in as %s student!\n\n", userLevel);
+    printf("\t\t\t\tPress any key to continue...");
+    getch();
+    studentMenu();
+}
+
+// Under Menu Page ==============================================================================
+void profile_detailsPage () { //                                                                |
+	int userProfile;
+	
+	system("cls");
+	printf("\n=====================================================================================================================\n");
+    printf("*                                              Account Information                                                  *\n");
+    printf("=====================================================================================================================\n");
+    printf("[ 9 ] Back\n\n");
+    
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Username: %s|                                                              \n", userN);
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t ------------------------------------      ------------------------------------\n");
+    printf("\t\t| Position: Professor of Philtech|        | Major Subject: %s|                    \n", profMajor);
+    printf("\t\t ------------------------------------      ------------------------------------\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Email Address: %s|                                                           \n", email);
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Contact Number: %s|                                                          \n", contactN);
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Password: %s|                                                              \n", passW);
+    printf("\t\t ------------------------------------------------------------------------------\n\n\n\n");
+    
+    printf("\t==============================================================================================\n");
+    printf("\t|                [ 1 ] Change Email. [ 2 ] Edit Number. [ 3 ] Change Password.               |\n");
+    printf("\t==============================================================================================\n\n");
+    
+    printf("");
+    scanf("%d", &userProfile);
+    
+    switch (userProfile) {
+    	case 1:
+    		change_emailPage();
+    		break;
+    	case 2:
+    		edit_numberPage();
+    		break;
+    	case 3:
+    		change_passPage();
+    		break;
+    	case 9:
+    		profMenu();
+    		break;
+    	default:
+    		printf("\nInvalid Input!");
+    		system("pause");
+    		break;
+	}
+}
+// Under edit professor profile details                                                         |
+void change_emailPage () { //                                                                   |
+	char loginPassW2[50];
+	char emailInput[50];
+	
+	system("cls");
+	changeAccountDisplay();
+    printf("[ 9 ] Back\n\n");
+	
+	printf("\t\tEnter new email address:\n");
+	printf("\t\t ------------------------------------------------------------------------------\n");
+	printf("\t\t| Email: ");
+    scanf(" %[^\n]s", emailInput);
+    if (strcmp(emailInput, "9") == 0) {
+        profile_detailsPage();
+    }
+    strcpy(email, emailInput); // Stored the new email in the email variable
+    
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+    printf("\t\tPassword for verification:\n");
+	printf("\t\t ------------------------------------------------------------------------------\n");
+	printf("\t\t| Password: ");
+    scanf("%s", loginPassW2);
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+    
+    if (strcmp(loginPassW2, passW) == 0) {
+        printf("\t\tEmail updated successfully.\n\n");
+    
+		printf("\t\tPress any key to continue...");
+    	getch();
+		profile_detailsPage();
+    } else {
+        printf("\t\t(System): Invalid password. Please try again.\n\n");
+        printf("\t\tPress any key to continue...");
+        getch();
+        change_emailPage();
+    }
+}
+void edit_numberPage () { //                                                                    |
+	char loginPassW3[50];
+	char contactInput[50];
+	
+	system("cls");
+	changeAccountDisplay();
+    printf("[ 9 ] Back\n\n");
+	
+    valid = 1; // Reset valid flag
+    printf("\t\tEnter new Contact Number:\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Contact Number: ");
+    scanf(" %[^\n]s", contactInput);
+
+        if (strcmp(contactInput, "9") == 0) {
+            profile_detailsPage();
+        }
+
+        for (int i = 0; i < strlen(contactInput); i++) {
+            if (!isdigit(contactInput[i])) { // Check if the character is not a digit
+                valid = 0;
+                printf("\n\n");
+                printf("\t\tError: Contact number must contain only digits.\n\n");
+                printf("\t\tPress any key to continue...");
+        		getch();
+        		edit_numberPage();
+                
+            }
+        }
+
+    // Store the valid contact number
+    strcpy(contactN, contactInput);
+    
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+    printf("\t\tPassword for verification:\n");
+	printf("\t\t ------------------------------------------------------------------------------\n");
+	printf("\t\t| Password: ");
+    scanf("%s", loginPassW3);
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+    
+    if (strcmp(loginPassW3, passW) == 0) {
+        printf("\t\tContact number updated successfully.\n\n");
+    
+		printf("\t\tPress any key to continue...");
+    	getch();
+		profile_detailsPage();
+    } else {
+        printf("\t\t(System): Invalid password. Please try again.\n\n");
+        printf("\t\tPress any key to continue...");
+        getch();
+        edit_numberPage();
+    }
+}
+void change_passPage() { //                                                                     |
+	char loginPassW4[50];
+    char passwordInput[50];
+    char confirmPassword[50];
+
+    system("cls");
+    changeAccountDisplay();
+    printf("[ 9 ] Back\n\n");
+
+    // Password for verification
+    printf("\t\tEnter a current password:\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Password: ");
+    scanf("%s", loginPassW4);
+    
+    if (strcmp(loginPassW4, "9") == 0) {
+        profile_detailsPage();
+    }
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+
+    // Check if the entered current password is correct
+    if (strcmp(loginPassW4, passW) != 0) {
+        printf("\t\t(System): Invalid password. Please try again.\n\n");
+        printf("\t\tPress any key to continue...");
+        getch();
+        change_passPage();
+    } 
+
+    printf("\t\tEnter new password:\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Password: ");
+    scanf(" %[^\n]s", passwordInput);  // Read the new password
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+
+    // Confirm new password
+    printf("\t\tPlease confirm your new password:\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Confirm Password: ");
+    scanf(" %[^\n]s", confirmPassword);  // Get the confirmation password
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+
+    // Check if the new password and confirmation match
+    if (strcmp(passwordInput, confirmPassword) != 0) {
+        printf("\t\t(System): Passwords do not match. Please try again.\n\n");
+        printf("\t\tPress any key to continue...");
+        getch(); 
+        change_passPage();
+    }
+
+    strcpy(passW, passwordInput);
+    printf("\t\tPassword updated successfully.\n\n");
+
+    printf("\t\tPress any key to continue...");
+    getch();
+    profile_detailsPage();
+}
+// End of Professor Menu Page ===================================================================
+
+//===================================
+void aboutusPage () {
+	printf("This is about us page");
+	system("pause");
+}
+
+void mark_attendancePage () {
+	printf("This is Mark Attendance Page");
+	system("pause");
+}
+
+void classroom_professorPage () {
+	printf("This is Classroom Management Teacher Verison");
+	system("pause");
+}
+
+// Professor menu
+int profMenu() {
+	
+	int userprofMenu;
+	while (1) {
+	system("cls");
+    printf("---------\n");
+	printf("|       | Name: %s\n", userN);
+	printf("| [ 9 ] | Position: Professor of Philtech\n");
+	printf("|       | Major Subject: %s\n", profMajor);
+	printf("---------\n");
+    printf("\n=====================================================================================================================\n");
+    printf("*                                              Professor Menu Page                                                  *\n");
+    printf("=====================================================================================================================\n\n");
+    
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 1 ] About Us                             |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 2 ] Mark Attendance                      |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 3 ] Classroom Management                 |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 0 ] Exit                                 |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    
+    printf("Answer: ");
+    scanf("%d", &userprofMenu);
+
+        switch (userprofMenu) {
+            case 1:
+                aboutusPage();
+                break;
+            case 2:
+                mark_attendancePage();
+                break;
+            case 3:
+                classroom_professorPage();
+                break;
+            case 9:
+            	profile_detailsPage();
+            	break;
+            case 0:
+                printf("Exiting Professor Menu...\n");
+                return 0;  // Exit the professor menu and go back to the main menu
+            default:
+                printf("Invalid choice. Please try again.\n");
+                system("pause");
+		}
+	}
+}
+// End of Professor Menu Page ==================================================================
+void profile_detailsPage2 () {
+	int userProfile2;
+	
+	system("cls");
+	printf("\n=====================================================================================================================\n");
+    printf("*                                              Account Information                                                  *\n");
+    printf("=====================================================================================================================\n");
+    printf("[ 9 ] Back\n\n");
+    
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Username: %s|                                                              \n", userN);
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t ------------------------------------      ------------------------------------\n");
+    printf("\t\t| Position: Student's of Philtech|        | College Level: %s|                 \n", userLevel);
+    printf("\t\t ------------------------------------      ------------------------------------\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Email Address: %s|                                                           \n", email);
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Contact Number: %s|                                                          \n", contactN);
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Password: %s|                                                              \n", passW);
+    printf("\t\t ------------------------------------------------------------------------------\n\n\n\n");
+    
+    printf("\t==============================================================================================\n");
+    printf("\t|                [ 1 ] Change Email. [ 2 ] Edit Number. [ 3 ] Change Password.               |\n");
+    printf("\t==============================================================================================\n\n");
+    
+    printf("");
+    scanf("%d", &userProfile2);
+    
+    switch (userProfile2) {
+    	case 1:
+    		change_emailPage2();
+    		break;
+    	case 2:
+    		edit_numberPage2();
+    		break;
+    	case 3:
+    		change_passPage2();
+    		break;
+    	case 9:
+    		studentMenu();
+    		break;
+    	default:
+    		printf("\nInvalid Input!");
+    		system("pause");
+    		break;
+	}
+}
+
+// Under edit student's profile details
+void change_emailPage2 () {
+	char loginPassW2[50];
+	char emailInput[50];
+	
+	system("cls");
+	changeAccountDisplay();
+    printf("[ 9 ] Back\n\n");
+	
+	printf("\t\tEnter new email address:\n");
+	printf("\t\t ------------------------------------------------------------------------------\n");
+	printf("\t\t| Email: ");
+    scanf(" %[^\n]s", emailInput);
+    if (strcmp(emailInput, "9") == 0) {
+        profile_detailsPage2();
+    }
+    strcpy(email, emailInput); // Stored the new email in the email variable
+    
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+    printf("\t\tPassword for verification:\n");
+	printf("\t\t ------------------------------------------------------------------------------\n");
+	printf("\t\t| Password: ");
+    scanf("%s", loginPassW2);
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+    
+    if (strcmp(loginPassW2, passW) == 0) {
+        printf("\t\tEmail updated successfully.\n\n");
+    
+		printf("\t\tPress any key to continue...");
+    	getch();
+		profile_detailsPage2();
+    } else {
+        printf("\t\t(System): Invalid password. Please try again.\n\n");
+        printf("\t\tPress any key to continue...");
+        getch();
+        change_emailPage2();
+    }
+}
+
+void edit_numberPage2 () {
+	char loginPassW3[50];
+	char contactInput[50];
+	
+	system("cls");
+	changeAccountDisplay();
+    printf("[ 9 ] Back\n\n");
+	
+    valid = 1; // Reset valid flag
+    printf("\t\tEnter new Contact Number:\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Contact Number: ");
+    scanf(" %[^\n]s", contactInput);
+
+        if (strcmp(contactInput, "9") == 0) {
+            profile_detailsPage2();
+        }
+
+        for (int i = 0; i < strlen(contactInput); i++) {
+            if (!isdigit(contactInput[i])) { // Check if the character is not a digit
+                valid = 0;
+                printf("\n\n");
+                printf("\t\tError: Contact number must contain only digits.\n\n");
+                printf("\t\tPress any key to continue...");
+        		getch();
+        		edit_numberPage2();
+                
+            }
+        }
+
+    // Store the valid contact number
+    strcpy(contactN, contactInput);
+    
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+    printf("\t\tPassword for verification:\n");
+	printf("\t\t ------------------------------------------------------------------------------\n");
+	printf("\t\t| Password: ");
+    scanf("%s", loginPassW3);
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+    
+    if (strcmp(loginPassW3, passW) == 0) {
+        printf("\t\tContact number updated successfully.\n\n");
+    
+		printf("\t\tPress any key to continue...");
+    	getch();
+		profile_detailsPage2();
+    } else {
+        printf("\t\t(System): Invalid password. Please try again.\n\n");
+        printf("\t\tPress any key to continue...");
+        getch();
+        edit_numberPage2();
+    }
+}
+
+void change_passPage2 () {
+	char loginPassW4[50];
+    char passwordInput[50];
+    char confirmPassword[50];
+
+    system("cls");
+    changeAccountDisplay();
+    printf("[ 9 ] Back\n\n");
+
+    // Password for verification
+    printf("\t\tEnter a current password:\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Password: ");
+    scanf("%s", loginPassW4);
+    
+    if (strcmp(loginPassW4, "9") == 0) {
+        profile_detailsPage2();
+    }
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+
+    // Check if the entered current password is correct
+    if (strcmp(loginPassW4, passW) != 0) {
+        printf("\t\t(System): Invalid password. Please try again.\n\n");
+        printf("\t\tPress any key to continue...");
+        getch();
+        change_passPage2();
+    } 
+
+    printf("\t\tEnter new password:\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Password: ");
+    scanf(" %[^\n]s", passwordInput);  // Read the new password
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+
+    // Confirm new password
+    printf("\t\tPlease confirm your new password:\n");
+    printf("\t\t ------------------------------------------------------------------------------\n");
+    printf("\t\t| Confirm Password: ");
+    scanf(" %[^\n]s", confirmPassword);  // Get the confirmation password
+    printf("\t\t ------------------------------------------------------------------------------\n\n");
+
+    // Check if the new password and confirmation match
+    if (strcmp(passwordInput, confirmPassword) != 0) {
+        printf("\t\t(System): Passwords do not match. Please try again.\n\n");
+        printf("\t\tPress any key to continue...");
+        getch(); 
+        change_passPage2();
+    }
+
+    strcpy(passW, passwordInput);
+    printf("\t\tPassword updated successfully.\n\n");
+
+    printf("\t\tPress any key to continue...");
+    getch();
+    profile_detailsPage2();
+}
+
+void enrollmentPage () {
+	printf("This is Enrollment Page");
+	system("pause");
+}
+
+void eog_requestPage() {
+	printf("This is EOG Request Page");
+	system("pause");
+}
+
+void classroom_studentPage () {
+	printf("This is Classroom management Page");
+	system("pause");
+}
+
+// Student menu
+int studentMenu() {
+	int userstudMenu;
+	
+	while (1) {
+    system("cls");
+    printf("---------\n");
+	printf("|       | Name: %s\n", userN);
+	printf("| [ 9 ] | Position: Student of Philtech\n");
+	printf("|       | College Level: %s\n", userLevel);
+	printf("---------\n");
+    printf("\n=====================================================================================================================\n");
+    printf("*                                                Student Menu Page                                                  *\n");
+    printf("=====================================================================================================================\n\n");
+    
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 1 ] About Us                             |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 2 ] Enrollment                           |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 3 ] Submit EOG Request                   |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 4 ] Classroom Management                 |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    printf("\t\t\t|              [ 0 ] Exit                                 |\n");
+    printf("\t\t\t-----------------------------------------------------------\n");
+    
+    printf("Answer: ");
+    scanf("%d", &userstudMenu);
+
+        switch (userstudMenu) {
+            case 1:
+                aboutusPage();
+                break;
+            case 2:
+                enrollmentPage ();
+                break;
+            case 3:
+                eog_requestPage();
+                break;
+            case 4:
+            	classroom_studentPage();
+            	break;
+            case 9:
+            	profile_detailsPage2();
+            	break;
+            case 0:
+                printf("Exiting Student Menu...\n");
+                return 0;
+            default:
+                printf("Invalid choice. Please try again.\n");
+                system("pause");
+		}
+	}
+}
